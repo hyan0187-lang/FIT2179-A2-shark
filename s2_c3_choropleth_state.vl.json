@@ -1,0 +1,110 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Shark Incidents by State in Australia",
+    "subtitle": "Total recorded incidents per state (1791–2025)",
+    "fontSize": 16,
+    "fontWeight": "bold",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#888888",
+    "anchor": "start"
+  },
+  "width": 600,
+  "height": 400,
+  "projection": {"type": "mercator"},
+  "config": {"view": {"stroke": ""}},
+  "layer": [
+    {
+      "data": {
+        "url": "australia_states.json",
+        "format": {"type": "json", "property": "features"}
+      },
+      "transform": [
+        {
+          "lookup": "properties.STATE_NAME",
+          "from": {
+            "data": {
+              "values": [
+                {"state": "New South Wales", "incidents": 460},
+                {"state": "Queensland", "incidents": 377},
+                {"state": "Western Australia", "incidents": 242},
+                {"state": "South Australia", "incidents": 84},
+                {"state": "Victoria", "incidents": 73},
+                {"state": "Tasmania", "incidents": 28},
+                {"state": "Northern Territory", "incidents": 19}
+              ]
+            },
+            "key": "state",
+            "fields": ["incidents"]
+          }
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 1},
+      "encoding": {
+        "color": {
+          "field": "incidents",
+          "type": "quantitative",
+          "scale": {
+            "domain": [0, 460],
+            "range": ["#cce5ff", "#0a3d6b"]
+          },
+          "legend": {
+            "title": "Number of incidents",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "orient": "bottom-right"
+          }
+        },
+        "tooltip": [
+          {"field": "properties.STATE_NAME", "title": "State"},
+          {"field": "incidents", "title": "Incidents", "format": ","}
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "australia_states.json",
+        "format": {"type": "json", "property": "features"}
+      },
+      "transform": [
+        {
+          "lookup": "properties.STATE_NAME",
+          "from": {
+            "data": {
+              "values": [
+                {"state": "New South Wales", "incidents": 460, "abbr": "NSW\n460"},
+                {"state": "Queensland", "incidents": 377, "abbr": "QLD\n377"},
+                {"state": "Western Australia", "incidents": 242, "abbr": "WA\n242"},
+                {"state": "South Australia", "incidents": 84, "abbr": "SA\n84"},
+                {"state": "Victoria", "incidents": 73, "abbr": "VIC\n73"},
+                {"state": "Tasmania", "incidents": 28, "abbr": "TAS\n28"},
+                {"state": "Northern Territory", "incidents": 19, "abbr": "NT\n19"}
+              ]
+            },
+            "key": "state",
+            "fields": ["incidents", "abbr"]
+          }
+        },
+        {"calculate": "geoCentroid(null, datum)", "as": "centroid"}
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "lineBreak": "\n"
+      },
+      "encoding": {
+        "longitude": {"field": "centroid[0]", "type": "quantitative"},
+        "latitude": {"field": "centroid[1]", "type": "quantitative"},
+        "text": {"field": "abbr", "type": "nominal"},
+        "color": {
+          "condition": {
+            "test": "datum.incidents > 200",
+            "value": "#ffffff"
+          },
+          "value": "#1a3a5c"
+        }
+      }
+    }
+  ]
+}

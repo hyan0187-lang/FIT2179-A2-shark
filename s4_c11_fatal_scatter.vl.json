@@ -1,0 +1,101 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Every Fatal Shark Attack Since 1960",
+    "subtitle": "Each dot = one death. Year on X axis, victim age on Y axis.",
+    "fontSize": 16,
+    "fontWeight": "bold",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#888888",
+    "anchor": "start"
+  },
+  "width": "container",
+  "height": 320,
+  "padding": {"top": 10, "left": 10, "right": 50, "bottom": 10},
+  "config": {"view": {"stroke": ""}},
+  "data": {
+    "values": [{"year":1960,"age":13,"species":"bull shark"},{"year":1961,"age":22,"species":"bull shark"},{"year":1961,"age":18,"species":"tiger shark"},{"year":1962,"age":16,"species":"white shark"},{"year":1963,"age":32,"species":"bull shark"},{"year":1966,"age":40,"species":"white shark"},{"year":1967,"age":23,"species":"white shark"},{"year":1971,"age":19,"species":"tiger shark"},{"year":1974,"age":25,"species":"white shark"},{"year":1974,"age":30,"species":"tiger shark"},{"year":1975,"age":17,"species":"white shark"},{"year":1975,"age":12,"species":"white shark"},{"year":1975,"age":37,"species":"white shark"},{"year":1977,"age":43,"species":"tiger shark"},{"year":1977,"age":74,"species":"tiger shark"},{"year":1977,"age":26,"species":"tiger shark"},{"year":1982,"age":32,"species":"white shark"},{"year":1982,"age":20,"species":"white shark"},{"year":1983,"age":21,"species":"tiger shark"},{"year":1983,"age":24,"species":"tiger shark"},{"year":1984,"age":15,"species":"tiger shark"},{"year":1985,"age":33,"species":"white shark"},{"year":1987,"age":47,"species":"white shark"},{"year":1988,"age":17,"species":"tiger shark"},{"year":1988,"age":62,"species":"tiger shark"},{"year":1989,"age":27,"species":"white shark"},{"year":1990,"age":36,"species":"tiger shark"},{"year":1991,"age":19,"species":"white shark"},{"year":1992,"age":28,"species":"white shark"},{"year":1993,"age":35,"species":"white shark"},{"year":1993,"age":31,"species":"white shark"},{"year":1993,"age":28,"species":"tiger shark"},{"year":1995,"age":29,"species":"white shark"},{"year":1998,"age":26,"species":"white shark"},{"year":1999,"age":22,"species":"white shark"},{"year":2000,"age":17,"species":"white shark"},{"year":2000,"age":25,"species":"white shark"},{"year":2000,"age":49,"species":"white shark"},{"year":2002,"age":23,"species":"white shark"},{"year":2002,"age":23,"species":"bull shark"},{"year":2003,"age":84,"species":"bull shark"},{"year":2004,"age":29,"species":"white shark"},{"year":2004,"age":38,"species":"tiger shark"},{"year":2004,"age":18,"species":"white shark"},{"year":2005,"age":26,"species":"white shark"},{"year":2005,"age":23,"species":"white shark"},{"year":2006,"age":21,"species":"bull shark"},{"year":2008,"age":16,"species":"bull shark"},{"year":2008,"age":52,"species":"white shark"},{"year":2010,"age":31,"species":"white shark"},{"year":2011,"age":50,"species":"white shark"},{"year":2011,"age":50,"species":"tiger shark"},{"year":2011,"age":21,"species":"white shark"},{"year":2011,"age":32,"species":"white shark"},{"year":2012,"age":32,"species":"white shark"},{"year":2012,"age":24,"species":"white shark"},{"year":2013,"age":19,"species":"tiger shark"},{"year":2013,"age":35,"species":"white shark"},{"year":2014,"age":28,"species":"white shark"},{"year":2014,"age":63,"species":"white shark"},{"year":2014,"age":50,"species":"white shark"},{"year":2014,"age":17,"species":"white shark"},{"year":2014,"age":18,"species":"tiger shark"},{"year":2015,"age":41,"species":"white shark"},{"year":2015,"age":47,"species":"white shark"},{"year":2016,"age":29,"species":"white shark"},{"year":2016,"age":60,"species":"white shark"},{"year":2017,"age":17,"species":"white shark"},{"year":2020,"age":60,"species":"white shark"},{"year":2020,"age":36,"species":"whaler shark"},{"year":2020,"age":15,"species":"white shark"},{"year":2020,"age":50,"species":"bull shark"},{"year":2021,"age":32,"species":"white shark"},{"year":2021,"age":59,"species":"white shark"},{"year":2021,"age":31,"species":"white shark"},{"year":2021,"age":57,"species":"white shark"},{"year":2022,"age":35,"species":"white shark"},{"year":2023,"age":16,"species":"bull shark"},{"year":2023,"age":46,"species":"whaler shark"},{"year":2023,"age":55,"species":"white shark"},{"year":2023,"age":15,"species":"white shark"},{"year":2025,"age":17,"species":"bull shark"},{"year":2025,"age":37,"species":"white shark"}]
+  },
+  "layer": [
+    {
+      "mark": {"type": "point", "filled": true, "size": 80, "opacity": 0.8},
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "quantitative",
+          "scale": {"domain": [1958, 2027]},
+          "axis": {
+            "title": "Year",
+            "titleFontSize": 12,
+            "labelFontSize": 11,
+            "format": "d",
+            "grid": false,
+            "values": [1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020, 2025]
+          }
+        },
+        "y": {
+          "field": "age",
+          "type": "quantitative",
+          "axis": {
+            "title": "Victim age",
+            "titleFontSize": 12,
+            "labelFontSize": 11,
+            "grid": true,
+            "gridColor": "#eeeeee"
+          }
+        },
+        "color": {
+          "field": "species",
+          "type": "nominal",
+          "scale": {
+            "domain": ["white shark", "tiger shark", "bull shark", "whaler shark", "other"],
+            "range": ["#746a66", "#9bd38b", "#2e5aa7", "#001937", "#e8c7e2"]
+          },
+          "legend": {
+            "title": "Species",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "orient": "bottom"
+          }
+        },
+        "tooltip": [
+          {"field": "year", "title": "Year", "format": "d"},
+          {"field": "age", "title": "Age"},
+          {"field": "species", "title": "Species"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "rule", "strokeDash": [4, 3], "strokeWidth": 1.5, "color": "#e63946", "opacity": 0.55},
+      "encoding": {"x": {"datum": 2011, "type": "quantitative"}}
+    },
+    {
+      "mark": {"type": "text", "align": "center", "baseline": "bottom", "fontSize": 10, "fontWeight": "bold", "color": "#e63946"},
+      "encoding": {
+        "x": {"datum": 2011, "type": "quantitative"},
+        "y": {"datum": 82, "type": "quantitative"},
+        "text": {"value": "2011: 4 deaths"}
+      }
+    },
+    {
+      "mark": {"type": "rule", "strokeDash": [4, 3], "strokeWidth": 1.5, "color": "#e63946", "opacity": 0.55},
+      "encoding": {"x": {"datum": 2020, "type": "quantitative"}}
+    },
+    {
+      "mark": {"type": "text", "align": "left", "baseline": "bottom", "dx": 3, "fontSize": 10, "fontWeight": "bold", "color": "#e63946"},
+      "encoding": {
+        "x": {"datum": 2020, "type": "quantitative"},
+        "y": {"datum": 82, "type": "quantitative"},
+        "text": {"value": "2020–21: 8 deaths"}
+      }
+    },
+    {
+      "mark": {"type": "text", "align": "center", "baseline": "bottom", "fontSize": 9, "fontStyle": "italic", "color": "#2e5aa7"},
+      "encoding": {
+        "x": {"datum": 2024, "type": "quantitative"},
+        "y": {"datum": 10, "type": "quantitative"},
+        "text": {"value": "Bull sharks\n2023 & 2025"}
+      }
+    }
+  ]
+}

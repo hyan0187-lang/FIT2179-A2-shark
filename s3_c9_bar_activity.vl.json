@@ -1,0 +1,90 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "What Were Victims Doing?",
+    "subtitle": "Top activities at time of shark incident",
+    "fontSize": 18,
+    "fontWeight": "bold",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#888888",
+    "anchor": "start"
+  },
+  "width": "container",
+  "height": 220,
+  "config": {"view": {"stroke": ""}},
+  "data": {
+    "values": [
+      {"activity": "Swimming",            "count": 470, "category": "High Risk"},
+      {"activity": "Boarding",            "count": 308, "category": "High Risk"},
+      {"activity": "Spearfishing",        "count": 132, "category": "Other"},
+      {"activity": "Snorkelling",         "count": 132, "category": "Other"},
+      {"activity": "Diving",              "count":  94, "category": "Other"},
+      {"activity": "Fishing",             "count":  40, "category": "Other"},
+      {"activity": "Unmotorised boating", "count":  34, "category": "Other"}
+    ]
+  },
+  "layer": [
+    {
+      "mark": {"type": "bar", "cornerRadiusEnd": 4},
+      "encoding": {
+        "y": {
+          "field": "activity",
+          "type": "nominal",
+          "sort": "-x",
+          "axis": {
+            "title": null,
+            "labelFontSize": 11,
+            "ticks": false,
+            "domain": false
+          }
+        },
+        "x": {
+          "field": "count",
+          "type": "quantitative",
+          "axis": {
+            "title": "Number of incidents",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "grid": true,
+            "gridColor": "#eeeeee"
+          }
+        },
+        "color": {
+          "field": "category",
+          "type": "nominal",
+          "scale": {
+            "domain": ["High Risk", "Other"],
+            "range": ["#e63946", "#378ADD"]
+          },
+          "legend": {
+            "title": "Activity Risk",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "orient": "bottom",
+            "direction": "horizontal"
+          }
+        },
+        "tooltip": [
+          {"field": "activity", "title": "Activity"},
+          {"field": "count", "title": "Incidents"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "align": "left", "dx": 5, "fontSize": 11, "fontWeight": "bold"},
+      "encoding": {
+        "y": {"field": "activity", "type": "nominal", "sort": "-x"},
+        "x": {"field": "count", "type": "quantitative"},
+        "text": {"field": "count", "type": "quantitative"},
+        "color": {
+          "condition": {
+            "test": "datum.activity === 'Swimming' || datum.activity === 'Boarding'",
+            "value": "#e63946"
+          },
+          "value": "#378ADD"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Fatal vs Non-Fatal Attacks by Species",
+    "subtitle": "Line length = gap between fatal and non-fatal counts",
+    "fontSize": 16,
+    "fontWeight": "bold",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#888888",
+    "anchor": "start"
+  },
+  "width": "container",
+  "height": 280,
+  "config": {"view": {"stroke": ""}, "padding": {"right": 120}},
+  "data": {
+    "values": [
+      {"species": "White shark",         "type": "Non-fatal", "count": 285},
+      {"species": "White shark",         "type": "Fatal",     "count": 96},
+      {"species": "Tiger shark",         "type": "Non-fatal", "count": 147},
+      {"species": "Tiger shark",         "type": "Fatal",     "count": 86},
+      {"species": "Wobbegong",           "type": "Non-fatal", "count": 215},
+      {"species": "Wobbegong",           "type": "Fatal",     "count": 0},
+      {"species": "Bull shark",          "type": "Non-fatal", "count": 147},
+      {"species": "Bull shark",          "type": "Fatal",     "count": 65},
+      {"species": "Whaler shark",        "type": "Non-fatal", "count": 72},
+      {"species": "Whaler shark",        "type": "Fatal",     "count": 6},
+      {"species": "Bronze whaler shark", "type": "Non-fatal", "count": 31},
+      {"species": "Bronze whaler shark", "type": "Fatal",     "count": 0}
+    ]
+  },
+  "layer": [
+    {
+      "mark": {"type": "line", "strokeWidth": 3, "color": "#94a3b8"},
+      "encoding": {
+        "y": {
+          "field": "species",
+          "type": "nominal",
+          "sort": ["White shark","Tiger shark","Bull shark","Wobbegong","Whaler shark","Bronze whaler shark"],
+          "axis": {
+            "title": null,
+            "labelFontSize": 12,
+            "ticks": false,
+            "domain": false
+          }
+        },
+        "x": {
+          "field": "count",
+          "type": "quantitative",
+          "scale": {"domainMin": 0, "domainMax": 300, "nice": false},
+          "axis": {
+            "title": "Number of incidents",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "grid": true,
+            "gridColor": "#eeeeee",
+            "values": [0, 50, 100, 150, 200, 250, 300]
+          }
+        },
+        "detail": {"field": "species"}
+      }
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 120},
+      "encoding": {
+        "y": {
+          "field": "species",
+          "type": "nominal",
+          "sort": ["White shark","Tiger shark","Bull shark","Wobbegong","Whaler shark","Bronze whaler shark"]
+        },
+        "x": {
+          "field": "count",
+          "type": "quantitative",
+          "scale": {"domainMin": 0, "domainMax": 300, "nice": false}
+        },
+        "color": {
+          "field": "type",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Fatal", "Non-fatal"],
+            "range": ["#e63946", "#378ADD"]
+          },
+          "legend": {
+            "title": "Outcome",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "orient": "right"
+          }
+        },
+        "tooltip": [
+          {"field": "species", "title": "Species"},
+          {"field": "type", "title": "Outcome"},
+          {"field": "count", "title": "Count"}
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {"species": "Wobbegong",   "x":   4, "label": "0 deaths",  "col": "#2a9d8f"},
+          {"species": "Tiger shark", "x": 152, "label": "37% fatal", "col": "#e63946"},
+          {"species": "White shark", "x": 290, "label": "25% fatal", "col": "#888888"}
+        ]
+      },
+      "mark": {"type": "text", "align": "left", "dx": 5, "fontSize": 10, "fontStyle": "italic"},
+      "encoding": {
+        "y": {
+          "field": "species",
+          "type": "nominal",
+          "sort": ["White shark","Tiger shark","Bull shark","Wobbegong","Whaler shark","Bronze whaler shark"]
+        },
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "scale": {"domainMin": 0, "domainMax": 300, "nice": false}
+        },
+        "text": {"field": "label", "type": "nominal"},
+        "color": {"field": "col", "type": "nominal", "scale": null, "legend": null}
+      }
+    }
+  ]
+}

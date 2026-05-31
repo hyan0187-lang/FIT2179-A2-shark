@@ -1,0 +1,64 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Shark Incidents in Australia Over Time",
+    "subtitle": "Annual recorded incidents from 1900 to 2025",
+    "fontSize": 16,
+    "fontWeight": "bold",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#888888",
+    "anchor": "start"
+  },
+  "width": "container",
+  "height": 300,
+  "config": {"view": {"stroke": ""}},
+  "data": {
+    "values": [{"year":1900,"incidents":5},{"year":1901,"incidents":6},{"year":1902,"incidents":2},{"year":1903,"incidents":4},{"year":1904,"incidents":1},{"year":1905,"incidents":2},{"year":1906,"incidents":4},{"year":1907,"incidents":4},{"year":1909,"incidents":1},{"year":1910,"incidents":4},{"year":1911,"incidents":3},{"year":1912,"incidents":7},{"year":1913,"incidents":5},{"year":1914,"incidents":8},{"year":1915,"incidents":4},{"year":1916,"incidents":8},{"year":1917,"incidents":2},{"year":1918,"incidents":8},{"year":1919,"incidents":5},{"year":1920,"incidents":9},{"year":1921,"incidents":5},{"year":1922,"incidents":5},{"year":1923,"incidents":11},{"year":1924,"incidents":5},{"year":1925,"incidents":3},{"year":1926,"incidents":4},{"year":1927,"incidents":8},{"year":1928,"incidents":8},{"year":1929,"incidents":23},{"year":1930,"incidents":7},{"year":1931,"incidents":6},{"year":1932,"incidents":8},{"year":1933,"incidents":10},{"year":1934,"incidents":14},{"year":1935,"incidents":9},{"year":1936,"incidents":15},{"year":1937,"incidents":10},{"year":1938,"incidents":8},{"year":1939,"incidents":6},{"year":1940,"incidents":8},{"year":1941,"incidents":4},{"year":1942,"incidents":6},{"year":1943,"incidents":1},{"year":1944,"incidents":1},{"year":1945,"incidents":2},{"year":1946,"incidents":8},{"year":1947,"incidents":5},{"year":1948,"incidents":5},{"year":1949,"incidents":11},{"year":1950,"incidents":5},{"year":1951,"incidents":7},{"year":1952,"incidents":5},{"year":1953,"incidents":7},{"year":1954,"incidents":6},{"year":1955,"incidents":4},{"year":1956,"incidents":8},{"year":1957,"incidents":6},{"year":1958,"incidents":7},{"year":1959,"incidents":11},{"year":1960,"incidents":9},{"year":1961,"incidents":11},{"year":1962,"incidents":5},{"year":1963,"incidents":4},{"year":1964,"incidents":5},{"year":1965,"incidents":3},{"year":1966,"incidents":7},{"year":1967,"incidents":2},{"year":1968,"incidents":3},{"year":1969,"incidents":3},{"year":1971,"incidents":3},{"year":1972,"incidents":6},{"year":1973,"incidents":4},{"year":1974,"incidents":3},{"year":1975,"incidents":8},{"year":1976,"incidents":1},{"year":1977,"incidents":6},{"year":1978,"incidents":3},{"year":1979,"incidents":2},{"year":1980,"incidents":6},{"year":1981,"incidents":4},{"year":1982,"incidents":3},{"year":1983,"incidents":5},{"year":1984,"incidents":8},{"year":1985,"incidents":5},{"year":1986,"incidents":5},{"year":1987,"incidents":9},{"year":1988,"incidents":6},{"year":1989,"incidents":14},{"year":1990,"incidents":9},{"year":1991,"incidents":7},{"year":1992,"incidents":6},{"year":1993,"incidents":7},{"year":1994,"incidents":5},{"year":1995,"incidents":11},{"year":1996,"incidents":11},{"year":1997,"incidents":13},{"year":1998,"incidents":8},{"year":1999,"incidents":5},{"year":2000,"incidents":19},{"year":2001,"incidents":13},{"year":2002,"incidents":11},{"year":2003,"incidents":13},{"year":2004,"incidents":23},{"year":2005,"incidents":16},{"year":2006,"incidents":10},{"year":2007,"incidents":17},{"year":2008,"incidents":14},{"year":2009,"incidents":28},{"year":2010,"incidents":14},{"year":2011,"incidents":15},{"year":2012,"incidents":23},{"year":2013,"incidents":15},{"year":2014,"incidents":25},{"year":2015,"incidents":33},{"year":2016,"incidents":32},{"year":2017,"incidents":21},{"year":2018,"incidents":30},{"year":2019,"incidents":25},{"year":2020,"incidents":37},{"year":2021,"incidents":28},{"year":2022,"incidents":25},{"year":2023,"incidents":28},{"year":2024,"incidents":19},{"year":2025,"incidents":17}]
+  },
+  "layer": [
+    {
+      "mark": {"type": "line", "strokeWidth": 2, "color": "#378ADD"},
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "quantitative",
+          "scale": {"domainMin": 1900, "domainMax": 2026},
+          "axis": {
+            "title": "Year",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "format": "d",
+            "grid": false,
+            "values": [1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]
+          }
+        },
+        "y": {
+          "field": "incidents",
+          "type": "quantitative",
+          "axis": {"title": "Number of incidents", "titleFontSize": 11, "labelFontSize": 11, "grid": true, "gridColor": "#eeeeee"}
+        },
+        "tooltip": [
+          {"field": "year", "title": "Year", "format": "d"},
+          {"field": "incidents", "title": "Incidents"}
+        ]
+      }
+    },
+    {
+      "transform": [{"filter": "datum.year === 2020"}],
+      "mark": {"type": "point", "filled": true, "size": 100, "color": "#e63946"},
+      "encoding": {
+        "x": {"field": "year", "type": "quantitative"},
+        "y": {"field": "incidents", "type": "quantitative"}
+      }
+    },
+    {
+      "transform": [{"filter": "datum.year === 2020"}],
+      "mark": {"type": "text", "align": "left", "dx": 8, "dy": -10, "fontSize": 11, "fontWeight": "bold", "color": "#e63946"},
+      "encoding": {
+        "x": {"field": "year", "type": "quantitative"},
+        "y": {"field": "incidents", "type": "quantitative"},
+        "text": {"value": "2020 peak: 37 — COVID beach boom"}
+      }
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "config": {"view": {"stroke": ""}, "padding": {"left": 5, "top": 5, "bottom": 5, "right": 90}},
+  "width": "container",
+  "height": 240,
+  "data": {
+    "values": [
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Dogs & Cats",             "emoji": "🐕", "total": 12289},
+      {"animal": "Livestock (incl. horses)","emoji": "🐄", "total": 5031},
+      {"animal": "Livestock (incl. horses)","emoji": "🐄", "total": 5031},
+      {"animal": "Livestock (incl. horses)","emoji": "🐄", "total": 5031},
+      {"animal": "Livestock (incl. horses)","emoji": "🐄", "total": 5031},
+      {"animal": "Livestock (incl. horses)","emoji": "🐄", "total": 5031},
+      {"animal": "Wildlife",                "emoji": "🦘", "total": 4980},
+      {"animal": "Wildlife",                "emoji": "🦘", "total": 4980},
+      {"animal": "Wildlife",                "emoji": "🦘", "total": 4980},
+      {"animal": "Wildlife",                "emoji": "🦘", "total": 4980},
+      {"animal": "Wildlife",                "emoji": "🦘", "total": 4980},
+      {"animal": "Snakes",                  "emoji": "🐍", "total": 539},
+      {"animal": "Marine animals",          "emoji": "🦈", "total": 525},
+      {"animal": "Spiders",                 "emoji": "🕷️","total": 474},
+      {"animal": "Wasps & Bees",            "emoji": "🐝", "total": 201}
+    ]
+  },
+  "transform": [
+    {
+      "window": [{"op": "rank", "as": "rank"}],
+      "groupby": ["animal"]
+    }
+  ],
+  "layer": [
+    {
+      "mark": {"type": "text", "baseline": "middle"},
+      "encoding": {
+        "x": {
+          "field": "rank",
+          "type": "ordinal",
+          "axis": {
+            "title": "Each icon = 1,000 hospitalisations",
+            "titleColor": "rgba(255,255,255,0.6)",
+            "titleFontSize": 11,
+            "labels": false,
+            "ticks": false,
+            "domain": false
+          }
+        },
+        "y": {
+          "field": "animal",
+          "type": "nominal",
+          "sort": ["Dogs & Cats", "Livestock (incl. horses)", "Wildlife", "Snakes", "Marine animals", "Spiders", "Wasps & Bees"],
+          "axis": {
+            "labelFontSize": 12,
+            "labelColor": "#ffffff",
+            "ticks": false,
+            "domain": false,
+            "title": null
+          }
+        },
+        "text": {"field": "emoji", "type": "nominal"},
+        "size": {"value": 28},
+        "tooltip": [
+          {"field": "animal", "title": "Animal"},
+          {"field": "total", "title": "Hospitalisations (2021-22)", "format": ","}
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "aggregate": [
+            {"op": "max", "field": "rank", "as": "maxRank"},
+            {"op": "max", "field": "total", "as": "total"}
+          ],
+          "groupby": ["animal"]
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "baseline": "middle",
+        "align": "left",
+        "dx": 15,
+        "fontWeight": "bold",
+        "fontSize": 12
+      },
+      "encoding": {
+        "x": {"field": "maxRank", "type": "ordinal"},
+        "y": {
+          "field": "animal",
+          "type": "nominal",
+          "sort": ["Dogs & Cats", "Livestock (incl. horses)", "Wildlife", "Snakes", "Marine animals", "Spiders", "Wasps & Bees"]
+        },
+        "text": {"field": "total", "type": "quantitative", "format": ","},
+        "color": {"value": "#ffffff"}
+      }
+    },
+    {
+      "data": {
+        "values": [{"label": "← where sharks sit", "animal": "Marine animals", "rank": 3}]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 8,
+        "fontSize": 11,
+        "fontStyle": "italic",
+        "fontWeight": 500
+      },
+      "encoding": {
+        "x": {"field": "rank", "type": "ordinal"},
+        "y": {
+          "field": "animal",
+          "type": "nominal",
+          "sort": ["Dogs & Cats", "Livestock (incl. horses)", "Wildlife", "Snakes", "Marine animals", "Spiders", "Wasps & Bees"]
+        },
+        "text": {"field": "label", "type": "nominal"},
+        "color": {"value": "rgba(255,255,255,0.55)"}
+      }
+    }
+  ]
+}

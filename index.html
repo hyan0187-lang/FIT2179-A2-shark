@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Does Australia Want You Dead?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    :root {
+      --hero:      #012862;
+      --s1:        #0661A8;
+      --s2:        #0FA7D2;
+      --s3:        #71D4D9;
+      --s4:        #C6E9E1;
+      --s5:        #F0DEB4;
+      --sand:      #F0DEB4;
+      --white:     #ffffff;
+      --off-white: rgba(255,255,255,0.85);
+      --muted:     rgba(255,255,255,0.55);
+      --accent:    #f97316;
+      --red:       #e63946;
+      --blue:      #378ADD;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--hero);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    h1 { font-size: clamp(3.5rem, 9vw, 8rem); line-height: 0.95; }
+    h2 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1; }
+    h3 { font-size: clamp(1.4rem, 3vw, 2rem); }
+
+    p {
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      line-height: 1.75;
+      color: var(--off-white);
+      max-width: 65ch;
+    }
+
+    strong, b { color: var(--white); font-weight: 600; }
+    .highlight { color: var(--accent); font-weight: 600; }
+    .highlight-red { color: var(--red); font-weight: 600; }
+    .highlight-blue { color: var(--blue); font-weight: 600; }
+    .highlight-injured { color: #f59e0b; font-weight: 600; }
+    .highlight-uninjured { color: #06b6d4; font-weight: 600; }
+
+    section {
+      position: relative;
+      padding: 5rem 6vw 2rem;
+      border: none;
+      margin: 0;
+    }
+
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    #hero {
+      background: var(--hero);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 6vw;
+    }
+
+    #hero .subtitle {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      margin-top: 0.5rem;
+    }
+
+    #hero .data-tag {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    #hero .scroll-hint {
+      margin-top: 4rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    .wave-divider {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+      margin-top: -1px;
+      margin-bottom: -1px;
+    }
+
+    .wave-divider svg { display: block; width: 100%; }
+
+    #section1 { background: var(--s1); }
+    #section2 { background: var(--s2); }
+    #section3 { background: var(--s3); }
+
+    #section4 {
+      background: var(--s4);
+      color: #0a2a2a;
+    }
+    #section4 p { color: rgba(0,0,0,0.75); }
+    #section4 h2, #section4 h3 { color: #0a2a2a; }
+    #section4 .section-label { color: rgba(0,0,0,0.4); }
+    #section4 .muted { color: rgba(0,0,0,0.5); }
+
+    #section5 {
+      background: var(--s5);
+      color: #0a2a2a;
+    }
+    #section5 p { color: rgba(0,0,0,0.75); }
+    #section5 h2, #section5 h3 { color: #0a2a2a; }
+    #section5 .section-label { color: rgba(0,0,0,0.4); }
+
+    .section-intro {
+      max-width: 800px;
+      margin-bottom: 3rem;
+    }
+
+    .section-intro h2 { margin-bottom: 1rem; }
+
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 3rem;
+      align-items: start;
+      margin-bottom: 4rem;
+    }
+
+    .chart-row.reverse {
+      grid-template-columns: 1.6fr 1fr;
+    }
+
+    .chart-row.reverse .chart-text { order: 2; }
+    .chart-row.reverse .chart-wrap { order: 1; }
+
+    .chart-text h3 { margin-bottom: 0.75rem; }
+    .chart-text p { margin-bottom: 1rem; }
+
+    .chart-wrap {
+      background: rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    #section4 .chart-wrap,
+    #section5 .chart-wrap {
+      background: rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .chart-full {
+      background: rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      margin-bottom: 4rem;
+      overflow: hidden;
+    }
+
+    .s3-layout {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 2rem;
+      margin-bottom: 4rem;
+      align-items: start;
+    }
+
+    .s3-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      min-width: 0;
+    }
+
+
+    .s3-small-wrap {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      overflow: hidden;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 2rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 1.25rem 1.75rem;
+      border-left: 3px solid var(--accent);
+    }
+
+    #section4 .stat-box,
+    #section5 .stat-box {
+      background: rgba(0,0,0,0.08);
+      border-left: 3px solid #c8570a;
+    }
+
+    .stat-box .num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    #section4 .stat-box .num,
+    #section5 .stat-box .num { color: #c8570a; }
+
+    .stat-box .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.25rem;
+    }
+
+    #section4 .stat-box .label,
+    #section5 .stat-box .label { color: rgba(0,0,0,0.5); }
+
+    footer {
+      background: #060f1e;
+      padding: 3rem 6vw;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.8;
+    }
+
+    footer a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: white; }
+    footer strong { color: white; }
+
+    .vega-embed { width: 100% !important; }
+    .vega-embed summary { display: none !important; }
+
+    @media (max-width: 900px) {
+      .chart-row,
+      .chart-row.reverse,
+      .s3-layout { grid-template-columns: 1fr; }
+      .chart-row.reverse .chart-text { order: 0; }
+      .chart-row.reverse .chart-wrap { order: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="section-label">Data Visualisation · FIT2179</div>
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 4rem; margin-top: 2rem;">
+    <div style="flex: 1;">
+      <h1 style="font-size: clamp(3rem, 7vw, 6rem);">Does Australia<br>Want You Dead?</h1>
+      <div class="subtitle">Sharks: Australia's Most Feared, Least Deadly Predator</div>
+      <p style="margin-top:1.5rem; max-width:55ch;">
+        <span class="highlight">1,283 incidents.</span> 234 years of data.
+        The truth about sharks in Australia might surprise you.
+      </p>
+      <div class="data-tag">Data: Australian Shark Attack File (ASAF) · AIHW Animal Hospitalisations 2021–22</div>
+      <div class="scroll-hint">↓ scroll to explore</div>
+    </div>
+    <img src="shark.png" alt="shark" style="width: 420px; flex-shrink: 0; filter: drop-shadow(0 0 40px rgba(100,180,255,0.3)); margin-bottom: 80px;">
+  </div>
+</section>
+
+<!-- wave: hero → s1 | bg=hero, fill=s1 -->
+<div class="wave-divider" style="background: #012862;">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#0661A8"/>
+    <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"/>
+  </svg>
+</div>
+
+<!-- SECTION 1 -->
+<section id="section1">
+  <div class="section-intro">
+    <div class="section-label">Section 01 — Wait, Sharks Aren't #1?</div>
+    <h2>The Myth</h2>
+    <p>
+      Every time you step into the ocean, there's that split-second thought —
+      <em>what if something's down there?</em>
+      Sharks have been living rent-free in our heads since <em>Jaws</em> hit cinemas in 1975.
+      But here's the thing: <strong>Australia has a lot of animals that want a piece of you</strong>
+      — and sharks are pretty far down that list.
+    </p>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-text">
+      <h3>Dogs Bite Harder</h3>
+      <p>
+        In 2021–22, animal-related hospitalisations in Australia told a story nobody expected.
+        <span class="highlight">Dogs alone sent over 12,000 people to hospital</span> — that's roughly
+        <span class="highlight">23 times more</span> than all marine animals combined.
+        Wasps, horses, even kangaroos all outranked sharks in sheer damage done.
+        The ocean's most infamous predator? Barely a blip.
+      </p>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="num">23×</div>
+          <div class="label">Dogs vs Marine animals</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">525</div>
+          <div class="label">Marine hospitalisations</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="chart1"></div>
+  </div>
+
+  <div class="chart-row reverse">
+    <div class="chart-text">
+      <h3>Most People Walk Away</h3>
+      <p>
+        Of the <span class="highlight">1,283 shark incidents</span> recorded in Australia since 1791,
+        only <span class="highlight-red">259 were fatal</span> — that's about <strong>1 in 5</strong>.
+        The majority of people who encountered a shark either swam away <span class="highlight-injured">injured</span>,
+        or walked away completely <span class="highlight-uninjured">unharmed</span>. Terrifying? Sure.
+        Guaranteed death sentence? Far from it.
+      </p>
+    </div>
+    <div class="chart-wrap" id="chart2"></div>
+  </div>
+</section>
+
+<!-- wave: s1 → s2 | bg=s1, fill=s2 -->
+<div class="wave-divider" style="background: #0661A8;">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,20 C360,70 720,0 1080,50 C1260,70 1380,30 1440,20 L1440,80 L0,80 Z" fill="#0FA7D2"/>
+    <path d="M0,20 C360,70 720,0 1080,50 C1260,70 1380,30 1440,20" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"/>
+  </svg>
+</div>
+
+<!-- SECTION 2 -->
+<section id="section2">
+  <div class="section-intro">
+    <div class="section-label">Section 02 — So Where Are They Hiding?</div>
+    <h2>Sharks in Australia</h2>
+    <p>
+      So sharks aren't the killing machines we thought. But let's be honest —
+      <strong>they're still out there.</strong> Australia has recorded shark incidents dating back to
+      <strong>1791</strong>, and over the past two centuries, the data shows some places are a lot
+      riskier than others. Where you swim matters.
+    </p>
+  </div>
+
+  <div class="chart-full">
+    <p style="margin-bottom:1rem; font-size:0.9rem; color:white;">
+      <strong>Click a state</strong> on the left map to filter incident locations on the right.
+      <span>Red dots mark fatal incidents.</span>
+    </p>
+    <div id="chart3"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; margin-top:1.25rem;">
+      <div>
+        <p style="font-size:0.9rem; line-height:1.7;">
+          <span class="highlight">NSW and QLD together account for over 65%</span> of all recorded incidents —
+          eastern seaboard density and surf culture drive the numbers.
+        </p>
+      </div>
+      <div>
+        <p style="font-size:0.9rem; line-height:1.7;">
+          But <span class="highlight-red">Western Australia has the highest fatality rate</span> despite fewer total incidents.
+          Remote coastlines mean help arrives too late when things go wrong.
+        </p>
+      </div>
+      <div>
+        <p style="font-size:0.9rem; line-height:1.7;">
+          The dot map reveals a dense coastal band along the east, with
+          <span class="highlight-red">fatal red dots</span> off WA disproportionate to the total count there.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-text">
+      <h3>The Numbers Are Rising</h3>
+      <p>
+        Shark incidents aren't a relic of the past — if anything,
+        <strong>the numbers have been creeping up</strong>.
+        The biggest spike on record? <span class="highlight-red">2020, with 37 incidents</span> —
+        right when COVID lockdowns sent everyone rushing to the beach the moment restrictions lifted.
+        More people in the water means more encounters. It's that simple.
+      </p>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="num">37</div>
+          <div class="label">Peak incidents in 2020</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="chart5"></div>
+  </div>
+</section>
+
+<!-- wave: s2 → s3 | bg=s2, fill=s3 -->
+<div class="wave-divider" style="background: #0FA7D2;">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,50 C300,10 600,70 900,30 C1100,10 1300,60 1440,40 L1440,80 L0,80 Z" fill="#71D4D9"/>
+    <path d="M0,50 C300,10 600,70 900,30 C1100,10 1300,60 1440,40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"/>
+  </svg>
+</div>
+
+<!-- SECTION 3 -->
+<section id="section3">
+  <div class="section-intro">
+    <div class="section-label">Section 03 — Are You Sharks' Favourite Meal?</div>
+    <h2>Who's Most at Risk?</h2>
+    <p>
+      Sharks don't discriminate — but the data does. After analysing
+      <strong>over 760 recorded victims</strong> with known age and gender,
+      a remarkably consistent pattern emerges: shark attacks are not random.
+      Your age, sex, the season, and what you're doing in the water all
+      shape your odds more than most people realise.
+    </p>
+  </div>
+
+  <div class="s3-layout">
+
+    <!-- LEFT: main chart + bar below -->
+    <div style="min-width:0; display:flex; flex-direction:column; gap:1.25rem;">
+      <div class="chart-wrap" id="chart6"></div>
+      <p style="font-size:0.88rem; line-height:1.75; max-width:100%;">
+        Each dot represents one incident.
+        <span style="color:#FFD700; font-weight:600;">Yellow = Male</span>,
+        <span style="color:#FF69B4; font-weight:600;">Pink = Female</span>.
+        The x-axis shows <strong>age (0–80)</strong>; the y-axis separates
+        <strong>males (above)</strong> from <strong>females (below)</strong> the centre line.<br><br>
+        The top-left quadrant is strikingly dense:
+        <span style="color:#FFD700; font-weight:600;">young males aged roughly 15–35</span>
+        account for <strong>487 incidents</strong> — nearly <strong>4× more</strong> than
+        any other age-gender group. The dots cluster so tightly they almost merge,
+        which is a clear statistical signal, not a coincidence.<br><br>
+        <span style="color:#FF69B4; font-weight:600;">Females</span> (below the line) make up
+        only <strong>11% of all recorded victims</strong>. Their incidents are spread more
+        evenly across age groups, with no single dominant cluster.
+        The data suggests the real risk driver is not swimming itself —
+        it is <em>who</em> swims, <em>how</em> aggressively, and <em>where</em>.
+      </p>
+      <!-- Bar chart pushed to bottom of left column -->
+      <div class="s3-small-wrap" style="margin-top:auto;">
+        <h3 style="margin-bottom:0.4rem; font-size:1rem;">What Were They Doing?</h3>
+        <p style="font-size:0.82rem; margin-bottom:0.6rem; line-height:1.65;">
+          <span style="color:#e63946; font-weight:600;">Swimming (470) and boarding (281)</span>
+          together account for <strong>59% of all incidents</strong> — the two most common
+          beach activities are also the two highest-risk ones.
+          Meanwhile, <span style="color:#378ADD; font-weight:600;">spearfishing and snorkelling</span>
+          each contribute <strong>~10%</strong> despite being niche activities,
+          suggesting a <em>disproportionately high risk per participant</em>.
+        </p>
+        <div id="chart9"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 3 supporting charts -->
+    <div class="s3-right">
+
+      <div class="s3-small-wrap">
+          <h3 style="margin-bottom:0.4rem; font-size:1rem;">Gender Gap</h3>
+          <p style="font-size:0.82rem; margin-bottom:0.6rem; line-height:1.65;">
+            <span style="color:#FFD700; font-weight:600;">Males</span> make up
+            <strong>89% of all victims</strong>. The pyramid shows male dominance
+            across every age bracket — most extreme in <strong>ages 10–29</strong>,
+            where <span style="color:#FFD700; font-weight:600;">393 males</span>
+            were recorded vs only
+            <span style="color:#FF69B4; font-weight:600;">52 females</span>.
+          </p>
+          <div id="chart7"></div>
+        </div>
+        <div class="s3-small-wrap">
+          <h3 style="margin-bottom:0.4rem; font-size:1rem;">When Is Most Dangerous?</h3>
+          <p style="font-size:0.82rem; margin-bottom:0.6rem; line-height:1.65;">
+            <span style="color:#0a3d6b; font-weight:600;">January leads with 231 incidents</span>
+            — the highest of any month.
+            <strong>Dec–Feb</strong> together total <strong>551 incidents (43%)</strong> of all attacks,
+            driven by Australia's beach season.
+            <span style="color:rgba(255,255,255,0.9); font-weight:500;">Winter months (Jun–Aug) drop to just 47–63 — the safest window.</span>
+          </p>
+          <div id="chart8"></div>
+        </div>
+
+
+    </div>
+  </div>
+</section>
+
+<!-- wave: s3 → s4 | bg=s3, fill=s4 -->
+<div class="wave-divider" style="background: #71D4D9;">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,30 C240,70 480,10 720,50 C960,80 1200,20 1440,45 L1440,80 L0,80 Z" fill="#C6E9E1"/>
+    <path d="M0,30 C240,70 480,10 720,50 C960,80 1200,20 1440,45" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"/>
+  </svg>
+</div>
+
+<!-- SECTION 4 -->
+<section id="section4">
+  <div class="section-intro">
+    <div class="section-label">Section 04 — Which Shark Should You Actually Fear?</div>
+    <h2>Meet the Sharks</h2>
+    <p>
+      You now know <em>who</em> gets attacked. But what's actually doing the attacking?
+      Australia has over 180 species of sharks — but when it comes to serious encounters,
+      <strong>three species are responsible for almost everything.</strong>
+    </p>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-text">
+      <h3>The Deadly Three</h3>
+      <p>
+        Look at the gap between <span class="highlight-red">fatal</span> and <span class="highlight-blue">non-fatal</span> attacks for each species.
+        <span class="highlight-red">White, Tiger, and Bull sharks are the only species with significant fatal numbers.</span>
+        Every other species on this list? Mostly just a nasty bite and a good story to tell at the pub.
+      </p>
+      <p>
+        The Wobbegong? <strong>215 attacks, zero fatalities.</strong>
+        Aggressive, yes. Lethal, not so much.
+      </p>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="num">36.9%</div>
+          <div class="label">Tiger shark fatality rate</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="chart10"></div>
+  </div>
+
+  <div class="chart-row reverse">
+    <div class="chart-text">
+      <h3>Every Fatal Attack Since 1960</h3>
+      <p>
+        Plot every death by year and victim age — the pattern is unmistakable.
+        <span class="highlight-red">White sharks dominate in sheer volume</span>, but
+        Tiger sharks kill most efficiently per encounter.
+      </p>
+      <p>
+        The <strong>2011 and 2021 clusters</strong> stand out — both years saw four or more
+        fatalities. Notice the victims span <strong>all ages from 12 to 84</strong>,
+        but the majority fall between <strong>15 and 50</strong>.
+      </p>
+      <p>
+        Since 2010, <span class="highlight-red">white shark fatalities have accelerated</span> —
+        more dots, and increasingly spread to newer decades.
+        Bull sharks account for the most <strong>recent deaths</strong> (2023, 2025),
+        moving into river mouths and populated coastal areas.
+      </p>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="num">4+</div>
+          <div class="label">Deaths in 2011 and 2021</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">37%</div>
+          <div class="label">White shark share of all fatalities</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="chart11"></div>
+  </div>
+</section>
+
+<!-- wave: s4 → s5 | bg=s4, fill=s5 -->
+<div class="wave-divider" style="background: #C6E9E1;">
+  <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C200,80 400,20 600,55 C800,85 1000,25 1200,55 C1340,75 1400,45 1440,40 L1440,100 L0,100 Z" fill="#F0DEB4"/>
+    <path d="M0,40 C200,80 400,20 600,55 C800,85 1000,25 1200,55 C1340,75 1400,45 1440,40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"/>
+  </svg>
+</div>
+
+<!-- SECTION 5 -->
+<section id="section5">
+  <div class="section-intro">
+    <div class="section-label">Section 05 — How Do You Not Get Eaten?</div>
+    <h2>Stay Safe</h2>
+    <p>
+      The good news? Knowing where, when, and what you're dealing with goes a long way.
+      Here's what the data says about staying safe.
+    </p>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-text">
+      <h3>The Rankings Have Shifted</h3>
+      <p>
+        State-by-state rankings have shifted dramatically over the decades.
+        <span style="color:#E07040; font-weight:600;">NSW</span> held rank #1 through the 1960s, 2000s, and 2010s —
+        Australia's most populated coastline, most surfers, most encounters.
+      </p>
+      <p>
+        <span style="color:#3AB86C; font-weight:600;">Queensland</span> surged to the top through the 1970s–90s,
+        driven by reef tourism and tropical water activities.
+        <span style="color:#D4A020; font-weight:600;">Western Australia</span> spent decades mid-table —
+        then overtook everyone by the 2020s.
+        Remote coastlines, fewer witnesses, no lifeguards. When things go wrong in WA, they go very wrong.
+      </p>
+      <p>
+        <span style="color:#9B59B6; font-weight:600;">SA</span>,
+        <span style="color:#5B90D9; font-weight:600;">VIC</span>, and
+        <span style="color:#E06B8B; font-weight:600;">TAS</span> have stayed consistently lower —
+        colder water, fewer beachgoers, calmer conditions.
+      </p>
+    </div>
+    <div class="chart-wrap" id="chart12"></div>
+  </div>
+
+  <div style="display:flex; gap:1.5rem; align-items:stretch; margin-bottom:4rem;">
+    <div style="display:flex; flex-direction:column; gap:1rem;">
+      <div class="stat-box">
+        <div class="num" style="color:#D4A020;">WA #1</div>
+        <div class="label">Most dangerous state, 2020s</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" style="color:#3AB86C;">QLD</div>
+        <div class="label">Led rankings three consecutive decades</div>
+      </div>
+    </div>
+    <div style="flex:1; padding:1.5rem; background:rgba(0,0,0,0.08); border-radius:16px; border-left:4px solid #c8570a;">
+      <p style="font-size:1.05rem; color:rgba(0,0,0,0.8); font-style:italic; max-width:none;">
+        "Sharks aren't hunting you. In 234 years of recorded data,
+        <strong>1,283 incidents across an entire continent</strong> is genuinely not that many.
+        But if you're a <strong>young male</strong>, planning to go <strong>surfing or swimming</strong>,
+        on a <strong>warm January morning</strong>, somewhere off the <strong>Western Australian coast</strong> —
+        maybe just check the conditions first. The ocean's beautiful. It just doesn't owe you anything."
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <h3 style="font-size: 13px; font-weight: 500; color: white; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.08em;">Data Sources</h3>
+  <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">
+    <a href="https://www.taronga.org.au/wildlife-and-conservation/the-institute/australian-shark-incident-database" target="_blank">
+      ↗ Australian Shark Incident Database (ASID) — Taronga Conservation Society
+    </a>
+    <a href="https://www.aihw.gov.au/reports/injury/contact-with-animals/data" target="_blank">
+      ↗ Contact with Animals Injury Data — Australian Institute of Health and Welfare (AIHW)
+    </a>
+  </div>
+  <div style="border-top: 0.5px solid rgba(255,255,255,0.15); padding-top: 1rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+    <span>Visualisation by <strong>Hanpu Yang</strong> · FIT2179 Data Visualisation 31/5/2026</span>
+  </div>
+</footer>
+
+<script>
+  const embedOpts = {
+    actions: false,
+    renderer: "svg",
+    config: {
+      background: "transparent",
+      font: "Inter",
+      axis: {
+        labelColor: "#ffffff",
+        titleColor: "#ffffff",
+        gridColor: "rgba(255,255,255,0.15)",
+        domainColor: "rgba(255,255,255,0.3)",
+        tickColor: "rgba(255,255,255,0.3)"
+      },
+      legend: { labelColor: "#ffffff", titleColor: "#ffffff" },
+      title: { color: "#ffffff", subtitleColor: "rgba(255,255,255,0.6)" },
+      view: { stroke: null }
+    }
+  };
+
+  const embedOptsDark = {
+    actions: false,
+    renderer: "svg",
+    config: {
+      background: "transparent",
+      font: "Inter",
+      axis: {
+        labelColor: "#0a2a2a",
+        titleColor: "#0a2a2a",
+        gridColor: "rgba(0,0,0,0.1)",
+        domainColor: "rgba(0,0,0,0.2)",
+        tickColor: "rgba(0,0,0,0.2)"
+      },
+      legend: { labelColor: "#0a2a2a", titleColor: "#0a2a2a" },
+      title: { color: "#0a2a2a", subtitleColor: "rgba(0,0,0,0.5)" },
+      view: { stroke: null }
+    }
+  };
+
+  vegaEmbed('#chart1',  's1_c1_animal_hospitalisations.vl.json', embedOpts);
+  vegaEmbed('#chart2',  's1_c2_fatal_vs_nonfatal.vl.json',       embedOpts);
+  vegaEmbed('#chart3',  's2_c3_c4_map_combined.vl.json',         embedOpts);
+  vegaEmbed('#chart5',  's2_c5_line_yearly_trend.vl.json',       embedOpts);
+  vegaEmbed('#chart6',  's3_c6_quadrant_scatter.vl.json',        embedOpts);
+  vegaEmbed('#chart7',  's3_c7_population_pyramid.vl.json',      embedOpts);
+  vegaEmbed('#chart8',  's3_c8_rose_monthly.vl.json',            embedOpts);
+  vegaEmbed('#chart9', 's3_c9_bar_activity.vl.json', {
+  actions: false,
+  renderer: "svg",
+  config: {
+    background: "transparent",
+    font: "Inter",
+    axis: {
+      labelColor: "#ffffff",
+      titleColor: "#ffffff",
+      gridColor: "rgba(255,255,255,0.2)",
+      domainColor: "rgba(255,255,255,0.3)",
+      tickColor: "rgba(255,255,255,0.3)"
+    },
+    legend: { labelColor: "#ffffff", titleColor: "#ffffff" },
+    title: { color: "#ffffff", subtitleColor: "rgba(255,255,255,0.6)" },
+    view: { stroke: null }
+  }
+});
+  vegaEmbed('#chart10', 's4_c10_dumbbell_species.vl.json',       embedOptsDark);
+  vegaEmbed('#chart11', 's4_c11_fatal_scatter.vl.json',          embedOptsDark);
+  vegaEmbed('#chart12', 's5_c12_bump_state_rank.vl.json',        embedOptsDark);
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 320,
+  "height": 320,
+  "title": {
+    "text": "When Do Attacks Happen?",
+    "subtitle": "Monthly distribution of shark incidents",
+    "fontSize": 16,
+    "fontWeight": "bold",
+    "subtitleFontSize": 12,
+    "anchor": "start"
+  },
+  "data": {
+    "values": [
+      {"month": "Jan", "count": 231, "t1": -1.5708, "t2": -1.0472, "tm": -1.3090},
+      {"month": "Feb", "count": 154, "t1": -1.0472, "t2": -0.5236, "tm": -0.7854},
+      {"month": "Mar", "count": 132, "t1": -0.5236, "t2":  0.0000, "tm": -0.2618},
+      {"month": "Apr", "count":  98, "t1":  0.0000, "t2":  0.5236, "tm":  0.2618},
+      {"month": "May", "count":  56, "t1":  0.5236, "t2":  1.0472, "tm":  0.7854},
+      {"month": "Jun", "count":  60, "t1":  1.0472, "t2":  1.5708, "tm":  1.3090},
+      {"month": "Jul", "count":  63, "t1":  1.5708, "t2":  2.0944, "tm":  1.8326},
+      {"month": "Aug", "count":  47, "t1":  2.0944, "t2":  2.6180, "tm":  2.3562},
+      {"month": "Sep", "count":  63, "t1":  2.6180, "t2":  3.1416, "tm":  2.8798},
+      {"month": "Oct", "count":  96, "t1":  3.1416, "t2":  3.6652, "tm":  3.4034},
+      {"month": "Nov", "count": 117, "t1":  3.6652, "t2":  4.1888, "tm":  3.9270},
+      {"month": "Dec", "count": 166, "t1":  4.1888, "t2":  4.7124, "tm":  4.4506}
+    ]
+  },
+  "layer": [
+    {
+      "mark": {"type": "arc", "innerRadius": 20},
+      "encoding": {
+        "theta":  {"field": "t1", "type": "quantitative", "scale": null},
+        "theta2": {"field": "t2", "type": "quantitative", "scale": null},
+        "radius": {
+          "field": "count",
+          "type": "quantitative",
+          "scale": {"type": "sqrt", "domain": [0, 231], "range": [20, 150]},
+          "legend": null
+        },
+        "color": {
+          "field": "count",
+          "type": "quantitative",
+          "scale": {"domain": [47, 231], "range": ["#cce5ff", "#0a3d6b"]},
+          "legend": {
+            "title": "Incidents",
+            "orient": "bottom",
+            "direction": "horizontal",
+            "gradientLength": 100
+          }
+        },
+        "tooltip": [
+          {"field": "month", "title": "Month"},
+          {"field": "count", "title": "Incidents"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "radius": 170, "fontSize": 11, "fontWeight": "bold"},
+      "encoding": {
+        "theta": {"field": "tm", "type": "quantitative", "scale": null},
+        "text":  {"field": "month", "type": "nominal"},
+        "color": {"value": "white"}
+      }
+    },
+    {
+      "data": {"values": [{"tm": -1.3090, "label": "Peak: 231"}]},
+      "mark": {"type": "text", "radius": 200, "fontSize": 10, "fontStyle": "italic", "fontWeight": "bold"},
+      "encoding": {
+        "theta": {"field": "tm", "type": "quantitative", "scale": null},
+        "text":  {"field": "label", "type": "nominal"},
+        "color": {"value": "#e63946"}
+      }
+    }
+  ]
+}

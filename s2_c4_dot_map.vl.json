@@ -1,0 +1,109 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Shark Incident Locations in Australia",
+    "subtitle": "Every recorded incident since 1791 — hover for details",
+    "fontSize": 16,
+    "fontWeight": "bold",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#888888",
+    "anchor": "start"
+  },
+  "width": 600,
+  "height": 400,
+  "projection": {"type": "mercator"},
+  "config": {"view": {"stroke": ""}},
+  "layer": [
+    {
+      "data": {
+        "url": "australia_states.json",
+        "format": {"type": "json", "property": "features"}
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e8f0f7",
+        "stroke": "#ffffff",
+        "strokeWidth": 1
+      }
+    },
+    {
+      "data": {
+        "url": "australia_states.json",
+        "format": {"type": "json", "property": "features"}
+      },
+      "transform": [
+        {
+          "lookup": "properties.STATE_NAME",
+          "from": {
+            "data": {
+              "values": [
+                {"state": "New South Wales", "abbr": "NSW"},
+                {"state": "Queensland", "abbr": "QLD"},
+                {"state": "Western Australia", "abbr": "WA"},
+                {"state": "South Australia", "abbr": "SA"},
+                {"state": "Victoria", "abbr": "VIC"},
+                {"state": "Tasmania", "abbr": "TAS"},
+                {"state": "Northern Territory", "abbr": "NT"}
+              ]
+            },
+            "key": "state",
+            "fields": ["abbr"]
+          }
+        },
+        {"calculate": "geoCentroid(null, datum)", "as": "centroid"}
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "color": "#6b8cae"
+      },
+      "encoding": {
+        "longitude": {"field": "centroid[0]", "type": "quantitative"},
+        "latitude": {"field": "centroid[1]", "type": "quantitative"},
+        "text": {"field": "abbr", "type": "nominal"}
+      }
+    },
+    {
+      "data": {"url": "shark_incidents.json"},
+      "transform": [
+        {"filter": "datum.Latitude != null && datum.Longitude != null"},
+        {"filter": "datum.Latitude > -45 && datum.Latitude < -10 && datum.Longitude > 110 && datum.Longitude < 155"},
+        {
+          "calculate": "datum['Victim.injury'] === 'fatal' ? 'Fatal' : datum['Victim.injury'] === 'injured' ? 'Injured' : 'Uninjured'",
+          "as": "outcome"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "opacity": 0.7,
+        "size": 30
+      },
+      "encoding": {
+        "longitude": {"field": "Longitude", "type": "quantitative"},
+        "latitude": {"field": "Latitude", "type": "quantitative"},
+        "color": {
+          "field": "outcome",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Fatal", "Injured", "Uninjured"],
+            "range": ["#e63946", "#f59e0b", "#06b6d4"]
+          },
+          "legend": {
+            "title": "Outcome",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "orient": "bottom-right"
+          }
+        },
+        "tooltip": [
+          {"field": "Location", "title": "Location"},
+          {"field": "Incident.year", "title": "Year"},
+          {"field": "outcome", "title": "Outcome"},
+          {"field": "Shark.common.name", "title": "Shark species"},
+          {"field": "Victim.activity", "title": "Activity"}
+        ]
+      }
+    }
+  ]
+}

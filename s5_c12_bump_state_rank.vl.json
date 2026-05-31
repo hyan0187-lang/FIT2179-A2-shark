@@ -1,0 +1,146 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "State Danger Rankings Over Time",
+    "subtitle": "Rank 1 = most incidents that decade. WA overtook NSW in the 2020s.",
+    "fontSize": 16,
+    "fontWeight": "bold",
+    "subtitleFontSize": 12,
+    "subtitleColor": "#888888",
+    "anchor": "start"
+  },
+  "width": "container",
+  "height": 320,
+  "padding": {"top": 10, "left": 10, "right": 60, "bottom": 10},
+  "config": {"view": {"stroke": ""}},
+  "data": {
+    "values": [
+      {"decade": 1960, "state": "NSW", "rank": 1},
+      {"decade": 1960, "state": "WA",  "rank": 2},
+      {"decade": 1960, "state": "QLD", "rank": 3},
+      {"decade": 1960, "state": "SA",  "rank": 4},
+      {"decade": 1960, "state": "VIC", "rank": 4},
+      {"decade": 1960, "state": "TAS", "rank": 6},
+      {"decade": 1970, "state": "QLD", "rank": 1},
+      {"decade": 1970, "state": "SA",  "rank": 2},
+      {"decade": 1970, "state": "NSW", "rank": 3},
+      {"decade": 1970, "state": "TAS", "rank": 4},
+      {"decade": 1970, "state": "VIC", "rank": 5},
+      {"decade": 1970, "state": "WA",  "rank": 5},
+      {"decade": 1980, "state": "QLD", "rank": 1},
+      {"decade": 1980, "state": "NSW", "rank": 2},
+      {"decade": 1980, "state": "WA",  "rank": 2},
+      {"decade": 1980, "state": "SA",  "rank": 4},
+      {"decade": 1980, "state": "VIC", "rank": 4},
+      {"decade": 1980, "state": "TAS", "rank": 6},
+      {"decade": 1990, "state": "QLD", "rank": 1},
+      {"decade": 1990, "state": "NSW", "rank": 2},
+      {"decade": 1990, "state": "SA",  "rank": 3},
+      {"decade": 1990, "state": "WA",  "rank": 3},
+      {"decade": 1990, "state": "VIC", "rank": 5},
+      {"decade": 1990, "state": "TAS", "rank": 6},
+      {"decade": 2000, "state": "NSW", "rank": 1},
+      {"decade": 2000, "state": "WA",  "rank": 2},
+      {"decade": 2000, "state": "QLD", "rank": 3},
+      {"decade": 2000, "state": "SA",  "rank": 4},
+      {"decade": 2000, "state": "VIC", "rank": 5},
+      {"decade": 2000, "state": "TAS", "rank": 6},
+      {"decade": 2010, "state": "NSW", "rank": 1},
+      {"decade": 2010, "state": "WA",  "rank": 2},
+      {"decade": 2010, "state": "QLD", "rank": 3},
+      {"decade": 2010, "state": "SA",  "rank": 4},
+      {"decade": 2010, "state": "VIC", "rank": 5},
+      {"decade": 2010, "state": "TAS", "rank": 6},
+      {"decade": 2020, "state": "WA",  "rank": 1},
+      {"decade": 2020, "state": "NSW", "rank": 2},
+      {"decade": 2020, "state": "QLD", "rank": 3},
+      {"decade": 2020, "state": "SA",  "rank": 4},
+      {"decade": 2020, "state": "VIC", "rank": 5},
+      {"decade": 2020, "state": "TAS", "rank": 6}
+    ]
+  },
+  "layer": [
+    {
+      "mark": {"type": "line", "strokeWidth": 3, "opacity": 1},
+      "encoding": {
+        "x": {
+          "field": "decade",
+          "type": "ordinal",
+          "axis": {
+            "title": "Decade",
+            "titleFontSize": 12,
+            "labelFontSize": 11,
+            "labelExpr": "datum.value + 's'",
+            "grid": false
+          }
+        },
+        "y": {
+          "field": "rank",
+          "type": "quantitative",
+          "scale": {"domain": [6.5, 0.5]},
+          "axis": {
+            "title": "Rank",
+            "titleFontSize": 12,
+            "labelFontSize": 11,
+            "tickCount": 6,
+            "grid": false,
+            "gridColor": "#eeeeee"
+          }
+        },
+        "color": {
+          "field": "state",
+          "type": "nominal",
+          "scale": {
+            "domain": ["NSW", "QLD", "WA", "SA", "VIC", "TAS"],
+            "range": ["#E07040", "#3AB86C", "#D4A020", "#9B59B6", "#5B90D9", "#E06B8B"]
+          },
+          "legend": {
+            "title": "State",
+            "titleFontSize": 11,
+            "labelFontSize": 11,
+            "orient": "left"
+          }
+        },
+        "detail": {"field": "state"}
+      }
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 80, "opacity": 1},
+      "encoding": {
+        "x": {"field": "decade", "type": "ordinal"},
+        "y": {"field": "rank", "type": "quantitative", "scale": {"domain": [6.5, 0.5]}},
+        "color": {
+          "field": "state",
+          "type": "nominal",
+          "scale": {
+            "domain": ["NSW", "QLD", "WA", "SA", "VIC", "TAS"],
+            "range": ["#E07040", "#3AB86C", "#D4A020", "#9B59B6", "#5B90D9", "#E06B8B"]
+          }
+        },
+        "tooltip": [
+          {"field": "decade", "title": "Decade"},
+          {"field": "state", "title": "State"},
+          {"field": "rank", "title": "Rank"}
+        ]
+      }
+    },
+  
+    {
+      "transform": [{"filter": "datum.decade === 2020"}],
+      "mark": {"type": "text", "align": "left", "dx": 8, "fontSize": 11, "fontWeight": "bold"},
+      "encoding": {
+        "x": {"field": "decade", "type": "ordinal"},
+        "y": {"field": "rank", "type": "quantitative", "scale": {"domain": [6.5, 0.5]}},
+        "text": {"field": "state", "type": "nominal"},
+        "color": {
+          "field": "state",
+          "type": "nominal",
+          "scale": {
+            "domain": ["NSW", "QLD", "WA", "SA", "VIC", "TAS"],
+            "range": ["#E07040", "#3AB86C", "#D4A020", "#9B59B6", "#5B90D9", "#E06B8B"]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Shark Incidents Across Australia",
+    "fontSize": 16,
+    "fontWeight": "bold",
+    "anchor": "start"
+  },
+  "config": {"view": {"stroke": ""}},
+  "hconcat": [
+    {
+      "title": {"text": "Total Incidents by State", "fontSize": 13, "color": "#444"},
+      "width": 350,
+      "height": 350,
+      "projection": {"type": "mercator"},
+      "layer": [
+        {
+          "data": {
+            "url": "australia_states.json",
+            "format": {"type": "json", "property": "features"}
+          },
+          "transform": [
+            {
+              "lookup": "properties.STATE_NAME",
+              "from": {
+                "data": {
+                  "values": [
+                    {"state": "New South Wales", "incidents": 460},
+                    {"state": "Queensland", "incidents": 377},
+                    {"state": "Western Australia", "incidents": 242},
+                    {"state": "South Australia", "incidents": 84},
+                    {"state": "Victoria", "incidents": 73},
+                    {"state": "Tasmania", "incidents": 28},
+                    {"state": "Northern Territory", "incidents": 19}
+                  ]
+                },
+                "key": "state",
+                "fields": ["incidents"]
+              }
+            }
+          ],
+          "params": [
+            {
+              "name": "stateSelection",
+              "select": {"type": "point", "fields": ["properties.STATE_NAME"]}
+            }
+          ],
+          "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 1},
+          "encoding": {
+            "color": {
+              "condition": {
+                "param": "stateSelection",
+                "field": "incidents",
+                "type": "quantitative",
+                "scale": {
+                  "domain": [0, 460],
+                  "range": ["#cce5ff", "#0a3d6b"]
+                },
+                "legend": {
+                  "title": "Incidents",
+                  "titleFontSize": 11,
+                  "labelFontSize": 11,
+                  "orient": "bottom"
+                }
+              },
+              "value": "#dddddd"
+            },
+            "tooltip": [
+              {"field": "properties.STATE_NAME", "title": "State"},
+              {"field": "incidents", "title": "Incidents", "format": ","}
+            ]
+          }
+        },
+        {
+          "data": {
+            "url": "australia_states.json",
+            "format": {"type": "json", "property": "features"}
+          },
+          "transform": [
+            {
+              "lookup": "properties.STATE_NAME",
+              "from": {
+                "data": {
+                  "values": [
+                    {"state": "New South Wales", "abbr": "NSW"},
+                    {"state": "Queensland", "abbr": "QLD"},
+                    {"state": "Western Australia", "abbr": "WA"},
+                    {"state": "South Australia", "abbr": "SA"},
+                    {"state": "Victoria", "abbr": "VIC"},
+                    {"state": "Tasmania", "abbr": "TAS"},
+                    {"state": "Northern Territory", "abbr": "NT"}
+                  ]
+                },
+                "key": "state",
+                "fields": ["abbr"]
+              }
+            },
+            {"filter": "datum.abbr != null"},
+            {"calculate": "geoCentroid(null, datum)", "as": "centroid"}
+          ],
+          "mark": {"type": "text", "fontSize": 11, "fontWeight": "bold"},
+          "encoding": {
+            "longitude": {"field": "centroid[0]", "type": "quantitative"},
+            "latitude": {"field": "centroid[1]", "type": "quantitative"},
+            "text": {"field": "abbr", "type": "nominal"},
+            "color": {
+              "condition": {
+                "param": "stateSelection",
+                "empty": true,
+                "value": "#ffffff"
+              },
+              "value": "#6b8cae"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": {"text": "Incident Locations", "fontSize": 13, "color": "#444"},
+      "width": 350,
+      "height": 350,
+      "projection": {"type": "mercator"},
+      "layer": [
+        {
+          "data": {
+            "url": "australia_states.json",
+            "format": {"type": "json", "property": "features"}
+          },
+          "mark": {
+            "type": "geoshape",
+            "fill": "#e8f0f7",
+            "stroke": "#ffffff",
+            "strokeWidth": 1
+          }
+        },
+        {
+          "data": {
+            "url": "australia_states.json",
+            "format": {"type": "json", "property": "features"}
+          },
+          "transform": [
+            {
+              "lookup": "properties.STATE_NAME",
+              "from": {
+                "data": {
+                  "values": [
+                    {"state": "New South Wales", "abbr": "NSW"},
+                    {"state": "Queensland", "abbr": "QLD"},
+                    {"state": "Western Australia", "abbr": "WA"},
+                    {"state": "South Australia", "abbr": "SA"},
+                    {"state": "Victoria", "abbr": "VIC"},
+                    {"state": "Tasmania", "abbr": "TAS"},
+                    {"state": "Northern Territory", "abbr": "NT"}
+                  ]
+                },
+                "key": "state",
+                "fields": ["abbr"]
+              }
+            },
+            {"filter": "datum.abbr != null"},
+            {"calculate": "geoCentroid(null, datum)", "as": "centroid"}
+          ],
+          "mark": {"type": "text", "fontSize": 11, "fontWeight": "bold", "color": "#6b8cae"},
+          "encoding": {
+            "longitude": {"field": "centroid[0]", "type": "quantitative"},
+            "latitude": {"field": "centroid[1]", "type": "quantitative"},
+            "text": {"field": "abbr", "type": "nominal"}
+          }
+        },
+        {
+          "data": {"url": "shark_incidents.json"},
+          "transform": [
+            {"filter": "datum.Latitude != null && datum.Longitude != null"},
+            {"filter": "datum.Latitude > -45 && datum.Latitude < -10 && datum.Longitude > 110 && datum.Longitude < 155"},
+            {
+              "calculate": "datum['Victim.injury'] === 'fatal' ? 'Fatal' : datum['Victim.injury'] === 'injured' ? 'Injured' : 'Uninjured'",
+              "as": "outcome"
+            },
+            {
+              "lookup": "State",
+              "from": {
+                "data": {
+                  "values": [
+                    {"abbr": "NSW", "full": "New South Wales"},
+                    {"abbr": "QLD", "full": "Queensland"},
+                    {"abbr": "WA", "full": "Western Australia"},
+                    {"abbr": "SA", "full": "South Australia"},
+                    {"abbr": "VIC", "full": "Victoria"},
+                    {"abbr": "TAS", "full": "Tasmania"},
+                    {"abbr": "NT", "full": "Northern Territory"}
+                  ]
+                },
+                "key": "abbr",
+                "fields": ["full"]
+              }
+            }
+          ],
+          "mark": {"type": "circle", "size": 15},
+          "encoding": {
+            "longitude": {"field": "Longitude", "type": "quantitative"},
+            "latitude": {"field": "Latitude", "type": "quantitative"},
+            "color": {
+              "field": "outcome",
+              "type": "nominal",
+              "scale": {
+                "domain": ["Fatal", "Injured", "Uninjured"],
+                "range": ["#e63946", "#f59e0b", "#06b6d4"]
+              },
+              "legend": {
+                "title": "Outcome",
+                "titleFontSize": 11,
+                "labelFontSize": 11,
+                "orient": "top-left"
+              }
+            },
+            "opacity": {
+              "condition": {
+                "param": "stateSelection",
+                "empty": true,
+                "value": 0.5
+              },
+              "value": 0.05
+            },
+            "tooltip": [
+              {"field": "Location", "title": "Location"},
+              {"field": "Incident.year", "title": "Year"},
+              {"field": "outcome", "title": "Outcome"},
+              {"field": "Shark.common.name", "title": "Shark species"},
+              {"field": "Victim.activity", "title": "Activity"}
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
