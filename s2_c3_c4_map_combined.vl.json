@@ -37,12 +37,13 @@
                 "key": "state",
                 "fields": ["incidents"]
               }
-            }
+            },
+            {"calculate": "datum.properties.STATE_NAME", "as": "stateName"}
           ],
           "params": [
             {
               "name": "stateSelection",
-              "select": {"type": "point", "fields": ["properties.STATE_NAME"]}
+              "select": {"type": "point", "fields": ["stateName"]}
             }
           ],
           "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 1},
@@ -96,6 +97,7 @@
               }
             },
             {"filter": "datum.abbr != null"},
+            {"calculate": "datum.properties.STATE_NAME", "as": "stateName"},
             {"calculate": "geoCentroid(null, datum)", "as": "centroid"}
           ],
           "mark": {"type": "text", "fontSize": 11, "fontWeight": "bold"},
@@ -192,7 +194,8 @@
                 },
                 "key": "abbr",
                 "fields": ["full"]
-              }
+              },
+              "as": ["stateName"]
             }
           ],
           "mark": {"type": "circle", "size": 15},
