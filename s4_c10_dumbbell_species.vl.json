@@ -11,7 +11,7 @@
   },
   "width": "container",
   "height": 280,
-  "config": {"view": {"stroke": ""}, "padding": {"right": 120}},
+  "config": {"view": {"stroke": ""}, "padding": {"right": 10}},
   "data": {
     "values": [
       {"species": "White shark",         "type": "Non-fatal", "count": 285},
@@ -83,7 +83,8 @@
             "title": "Outcome",
             "titleFontSize": 11,
             "labelFontSize": 11,
-            "orient": "right"
+            "orient": "top",
+            "direction": "horizontal"
           }
         },
         "tooltip": [
